@@ -1,7 +1,7 @@
 <script type="text/javascript">
 (function(){
   
-  function escapeHtml(string) {
+function escapeHtml(string) {
   return String(string).replace(/[&<>"'`=\/]/g, function fromEntityMap(s) {
     return entityMap[s];
   });
@@ -360,7 +360,7 @@ function doSubmission(node, flowdata) {
             children: undefined
           };
 
-          if ( diffContent.icon == "fa-eye" ) {
+          if (diffContent.icon == "fa-eye") {
             $('.node-' + nId).addClass('moved');
             $('.group-' + nId).addClass('moved');
           }
@@ -411,7 +411,7 @@ function doSubmission(node, flowdata) {
           $('.node-' + nId).addClass('moved');
           $('.group-' + nId).addClass('moved');
         }
-        
+
         if (diffContent.icon == "fa-pencil") {
           $('.node-' + nId).addClass('changed');
           $('.group-' + nId).addClass('changed');
@@ -553,7 +553,7 @@ function doSubmission(node, flowdata) {
 </script>
 
 <style>
-  .flow-description-text {
+.flow-description-text {
   font-family: monospace;
   font-size: 30px;
   dominant-baseline: middle;
