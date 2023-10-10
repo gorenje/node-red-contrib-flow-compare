@@ -48,9 +48,26 @@ Red are deletions and green are additions, i.e., changes.
 
 ## Not Perfect
 
+1) Deployment necessary
+
 This is not a perfect solution because the node has to be dragged onto the workspace *and* deployed. It needs to be deployed since the server-side part of this node collects the flows details from the server and sends it to the frontend.
 
 So this node needs to be included and deployed *before* comparison can happen. This is not ideal, better would be that this feature be integrated directly into the editor. The editor does also have a comparison tool but its not visual and shows, for my taste, too much information.
+
+2) Image Zoom
+
+Zoom of comarison image is not peferect since pinch does not work, only the scroll works for zoom. Since scroll is also used to scroll up and down, zooming around in the image is painful but doable.
+
+I suspect this has to do with the d3 library since with version 7 [pinch works](https://flowhub.org/f/bd2901f55cfc55ef) but Node-RED uses version 3 which does not - it seems - support pinch (or at least I haven't worked how).
+
+3) Extra JS scripts
+
+This node will load two JS libraries (when added [to the palette](https://github.com/gorenje/node-red-contrib-flow-compare/blob/4981b85bf29cf5726609d39a0f6e21e8456d72f5/nodes/flowcompare.html#L478-L479)):
+
+- https://cdn.openmindmap.org/thirdparty/diff.min.js
+- https://cdn.openmindmap.org/embed/flowviewer.js
+
+If your browser does not like this, then this node won't make you happy!
 
 ### Artifacts
 
