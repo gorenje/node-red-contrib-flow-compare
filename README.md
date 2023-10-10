@@ -6,7 +6,7 @@ Flows are deployed from the editor to the server, hence they can differ. This no
 
 ## Why?
 
-I wanted to have a *visual* comparison between versions of flows. Also I wanted changes to be classified as being either visual or textual: visual changes movements of nodes, textual are content changes.
+I wanted to have a *visual* comparison between versions of flows. Also I wanted changes to be classified as being either visual or textual: visual changes movements of nodes, textual are content changes. Node-RED does have a diff tool however, for me, this shows too much (all nodes are shown even those that haven't changed) and changes that are visual are shown textually. 
 
 ## Description
 
