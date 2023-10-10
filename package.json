@@ -1,0 +1,33 @@
+{
+  "name" : "@gregoriusrippenstein/node-red-contrib-flowcompare",
+  "version": "0.0.1",
+  "dependencies": {
+  },
+
+  "keywords": [
+    "node-red"
+  ],
+
+  "homepage": "https://github.com/gorenje/node-red-contrib-flow-compare#readme",
+  "license": "Don't do evil.",
+  "author": "Gerrit Riessen <gerrit@openmindmap.org>",
+  "engines": {
+    "node": ">=14"
+  },
+
+  "node-red" : {
+    "version": ">=3.0.0",
+    "nodes": {
+       "flowcompare": "nodes/flowcompare.js"
+    }
+  },
+
+  "description": "Description of what these nodes do.",
+  "repository": {
+    "type": "github",
+    "url": "git+https://github.com/gorenje/node-red-contrib-flow-compare.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gorenje/node-red-contrib-flow-compare"
+  }
+}

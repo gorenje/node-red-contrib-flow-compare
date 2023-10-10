@@ -1,0 +1,111 @@
+module.exports = function (RED) {
+  function FlowCompareFunctionality(config) {
+    RED.nodes.createNode(this, config);
+
+    var node = this;
+    var cfg = config;
+
+    node.on('close', function () {
+      node.status({});
+    });
+
+    /* msg handler, in this case pass the message on unchanged */
+    node.on("input", function (msg, send, done) {
+      send(msg);
+      done();
+    });
+  }
+
+  RED.nodes.registerType("FlowCompare", FlowCompareFunctionality);
+
+  function compareFlows(msg) {
+    var oldFlowRevision = {};
+    var newFlowRevision = {};
+
+    for (var idx = 0; idx < msg.payload.length; idx++) {
+      oldFlowRevision[msg.payload[idx].id] = msg.payload[idx]
+    }
+
+    for (var idx = 0; idx < msg.new_flowdata.length; idx++) {
+      newFlowRevision[msg.new_flowdata[idx].id] = msg.new_flowdata[idx]
+    }
+
+    var changes = []
+
+    /* nodes that have been deleted */
+    for (var idx = 0; idx < msg.payload.length; idx++) {
+      var oldObj = msg.payload[idx];
+
+      if (!newFlowRevision[oldObj.id]) {
+        changes.push({
+          type: "deleted",
+          id: oldObj.id,
+          oldObj: oldObj,
+          newObj: undefined
+        })
+      }
+    }
+
+    for (var idx = 0; idx < msg.new_flowdata.length; idx++) {
+      var newObj = msg.new_flowdata[idx];
+      var oldObj = oldFlowRevision[newObj.id];
+
+      if (!oldObj) {
+        changes.push({
+          type: "added",
+          id: newObj.id,
+          oldObj: undefined,
+          newObj: newObj
+        })
+      } else {
+        if (JSON.stringify(oldObj) != JSON.stringify(newObj)) {
+          changes.push({
+            type: "changed",
+            id: newObj.id,
+            oldObj: oldObj,
+            newObj: newObj
+          })
+        }
+      }
+    }
+
+    return changes;
+  }
+
+  RED.httpAdmin.post("/FlowCompare/:id",
+    RED.auth.needsPermission("FlowCompare.write"),
+    (req, res) => {
+      var node = RED.nodes.getNode(req.params.id);
+      if (node != null) {
+        try {
+          if (req.body && node.type == "FlowCompare") {
+            /*
+            console.log( "sending flow data from backebn")
+            console.log( RED )
+            console.log( RED.nodes )
+            console.log( RED.utils )
+            */
+            var nodes = [];
+            RED.nodes.eachNode(nde => {
+              if (nde.z == req.body.flowid || nde.id == req.body.flowid) nodes.push(nde)
+            })
+
+            res.status(200).send({
+              "status":  "ok",
+              "flowid":  req.body.flowid,
+              "nodes":   nodes,
+              "changes": compareFlows({payload: nodes, new_flowdata: req.body.flowdata})
+            })
+          } else {
+            res.sendStatus(404);
+          }
+        } catch (err) {
+          console.error(err);
+          res.status(500).send(err.toString());
+          node.error("FlowCompare: Submission failed: " + err.toString())
+        }
+      } else {
+        res.sendStatus(404);
+      }
+    });
+}
