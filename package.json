@@ -5,7 +5,7 @@
   },
 
   "keywords": [
-    "node-red"
+    "node-red", "comparison", "flow-comparison"
   ],
 
   "homepage": "https://github.com/gorenje/node-red-contrib-flow-compare#readme",
@@ -22,7 +22,7 @@
     }
   },
 
-  "description": "Description of what these nodes do.",
+  "description": "Compare editor flow with the flow deployed to the server.",
   "repository": {
     "type": "github",
     "url": "git+https://github.com/gorenje/node-red-contrib-flow-compare.git"

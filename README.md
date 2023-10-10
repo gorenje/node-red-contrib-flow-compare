@@ -73,8 +73,8 @@ If your browser does not like this, then this node won't make you happy!
 
 - [GitHub repo](https://github.com/gorenje/node-red-contrib-flow-compare)
 - [Flow maintaning code](https://flowhub.org/f/bd2901f55cfc55ef)
-- [NPMjs node package]()
-- [Node-RED package]()
+- [NPMjs node package](https://www.npmjs.com/package/@gregoriusrippenstein/node-red-contrib-flowcompare)
+- [Node-RED package](https://flows.nodered.org/node/@gregoriusrippenstein/node-red-contrib-flowcompare)
 
 ### Guarantee
 
