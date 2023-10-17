@@ -10,7 +10,11 @@ I wanted to have a *visual* comparison between versions of flows. Also I wanted 
 
 ## Description
 
-When placed in the workspace and having been deployed, open the property panel shows the following:
+Once installed, node can be accessed via the menu:
+
+![img](https://cdn.openmindmap.org/content/1697530336854_Screen_Shot_2023-10-17_at_10.12.07.png)
+
+The panel is split into a list of changes, an image visually showing changes and a detailed change panel at the bottom:
 
 ![img](https://cdn.openmindmap.org/content/1696944958539_flowcompare.gif)
 
@@ -35,6 +39,7 @@ In the image, nodes are colorised:
 - green are added nodes
 - green with blue border are moved nodes, nodes that have only changed visually
 - purple nodes have textual, i.e., content changes
+- nodes are highlighted with red-border when change is selected in the change box
 
 ![img](https://cdn.openmindmap.org/content/1696946893210_Screen_Shot_2023-10-10_at_16.02.13.png)
 
@@ -48,26 +53,16 @@ Red are deletions and green are additions, i.e., changes.
 
 ## Not Perfect
 
-1) Deployment necessary
+1) Image Zoom
 
-This is not a perfect solution because the node has to be dragged onto the workspace *and* deployed. It needs to be deployed since the server-side part of this node collects the flows details from the server and sends it to the frontend.
+Zoom of comparison image is not perfect since pinch does not work, only the scroll works for zoom. Since scroll is also used to scroll up and down, scroll left and right to zoom image in and out.
 
-So this node needs to be included and deployed *before* comparison can happen. This is not ideal, better would be that this feature be integrated directly into the editor. The editor does also have a comparison tool but its not visual and shows, for my taste, too much information.
-
-2) Image Zoom
-
-Zoom of comarison image is not peferect since pinch does not work, only the scroll works for zoom. Since scroll is also used to scroll up and down, zooming around in the image is painful but doable.
-
-I suspect this has to do with the d3 library since with version 7 [pinch works](https://flowhub.org/f/bd2901f55cfc55ef) but Node-RED uses version 3 which does not - it seems - support pinch (or at least I haven't worked how).
-
-3) Extra JS scripts
+2) Extra JS scripts
 
 This node will load two JS libraries (when added [to the palette](https://github.com/gorenje/node-red-contrib-flow-compare/blob/4981b85bf29cf5726609d39a0f6e21e8456d72f5/nodes/flowcompare.html#L478-L479)):
 
 - https://cdn.openmindmap.org/thirdparty/diff.min.js
 - https://cdn.openmindmap.org/embed/flowviewer.js
-
-If your browser does not like this, then this node won't make you happy!
 
 ### Artifacts
 
@@ -76,6 +71,4 @@ If your browser does not like this, then this node won't make you happy!
 - [NPMjs node package](https://www.npmjs.com/package/@gregoriusrippenstein/node-red-contrib-flowcompare)
 - [Node-RED package](https://flows.nodered.org/node/@gregoriusrippenstein/node-red-contrib-flowcompare)
 
-### Guarantee
 
-There is none, use at own risk.

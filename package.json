@@ -4,25 +4,28 @@
   "dependencies": {
   },
 
+  "description": "Compare editor flow with the flow deployed to the server.",
   "keywords": [
     "node-red", "comparison", "flow-comparison"
   ],
 
   "homepage": "https://github.com/gorenje/node-red-contrib-flow-compare#readme",
   "license": "Don't do evil.",
-  "author": "Gerrit Riessen <gerrit@openmindmap.org>",
+  "author": "Gerrit Riessen <gerrit@openmindmap.com>",
   "engines": {
     "node": ">=14"
   },
 
   "node-red" : {
     "version": ">=3.0.0",
+    "plugins": {
+      "sidebar-plugin": "plugins/flowcompare.html"
+    },
     "nodes": {
        "flowcompare": "nodes/flowcompare.js"
     }
   },
 
-  "description": "Compare editor flow with the flow deployed to the server.",
   "repository": {
     "type": "github",
     "url": "git+https://github.com/gorenje/node-red-contrib-flow-compare.git"

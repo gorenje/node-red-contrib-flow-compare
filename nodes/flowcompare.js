@@ -16,7 +16,7 @@ module.exports = function (RED) {
     });
   }
 
-  RED.nodes.registerType("FlowCompare", FlowCompareFunctionality);
+  RED.nodes.registerType("FlowCompareCfg", FlowCompareFunctionality);
 
   function compareFlows(msg) {
     var oldFlowRevision = {};
@@ -72,19 +72,11 @@ module.exports = function (RED) {
     return changes;
   }
 
-  RED.httpAdmin.post("/FlowCompare/:id",
-    RED.auth.needsPermission("FlowCompare.write"),
+  RED.httpAdmin.post("/FlowCompareCfg",
+    RED.auth.needsPermission("FlowCompareCfg.write"),
     (req, res) => {
-      var node = RED.nodes.getNode(req.params.id);
-      if (node != null) {
         try {
-          if (req.body && node.type == "FlowCompare") {
-            /*
-            console.log( "sending flow data from backebn")
-            console.log( RED )
-            console.log( RED.nodes )
-            console.log( RED.utils )
-            */
+          if (req.body ) {
             var nodes = [];
             RED.nodes.eachNode(nde => {
               if (nde.z == req.body.flowid || nde.id == req.body.flowid) nodes.push(nde)
@@ -102,10 +94,6 @@ module.exports = function (RED) {
         } catch (err) {
           console.error(err);
           res.status(500).send(err.toString());
-          node.error("FlowCompare: Submission failed: " + err.toString())
         }
-      } else {
-        res.sendStatus(404);
-      }
     });
 }
