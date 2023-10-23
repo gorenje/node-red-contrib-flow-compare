@@ -88,6 +88,11 @@
       addPanZoom();
       ensureYourConfigNodeExists();
 
+      RED.actions.remove("flowcompare:compare-flow-to-remote")
+      RED.actions.add("flowcompare:compare-flow-to-remote",function() {
+        doSubmission(getFlowDataFromCurrentWorkspace())
+      });
+
       $('#node-input-flowcompare-button').on('click', (e) => {
          if ( e ) { e.preventDefault(); }
          doSubmission(getFlowDataFromCurrentWorkspace())
