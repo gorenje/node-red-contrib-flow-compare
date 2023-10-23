@@ -71,4 +71,6 @@ This node will load two JS libraries (when added [to the palette](https://github
 - [NPMjs node package](https://www.npmjs.com/package/@gregoriusrippenstein/node-red-contrib-flowcompare)
 - [Node-RED package](https://flows.nodered.org/node/@gregoriusrippenstein/node-red-contrib-flowcompare)
 
+- [Frontend Flow](https://flowhub.org/f/7750f7bbea836e0e) to trigger a comparison update on flow tab change.
+
 
