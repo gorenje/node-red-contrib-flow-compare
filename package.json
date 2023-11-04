@@ -1,6 +1,6 @@
 {
   "name" : "@gregoriusrippenstein/node-red-contrib-flowcompare",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "dependencies": {
   },
 
@@ -27,8 +27,8 @@
   },
 
   "repository": {
-    "type": "github",
-    "url": "git+https://github.com/gorenje/node-red-contrib-flow-compare.git"
+    "type": "git",
+    "url": "https://github.com/gorenje/node-red-contrib-flow-compare.git"
   },
   "bugs": {
     "url": "https://github.com/gorenje/node-red-contrib-flow-compare"
