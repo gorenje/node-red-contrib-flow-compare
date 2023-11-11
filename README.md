@@ -20,6 +20,8 @@ The panel is split into a list of changes, an image visually showing changes and
 
 Clicking the compare button generates the comparison details.
 
+**Update**: A double click in the listing of changes will now open the edit panel for that node. That is not shown in the above animation.
+
 ## Iconography
 
 The top box contains all changes that have happened:
