@@ -9,7 +9,7 @@
     "node-red", "comparison", "flow-comparison"
   ],
 
-  "homepage": "https://github.com/gorenje/node-red-contrib-flow-compare#readme",
+  "homepage": "https://flowhub.org/f/bd2901f55cfc55ef",
   "license": "Don't do evil.",
   "author": "Gerrit Riessen <gerrit@openmindmap.com>",
   "engines": {
