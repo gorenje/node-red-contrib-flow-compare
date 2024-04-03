@@ -72,6 +72,38 @@ module.exports = function (RED) {
     return changes;
   }
 
+  RED.httpAdmin.get('/FlowCompare/jslib/:libraryname', function (req, res) {
+    const path = require('path');
+    const fs = require('fs')
+    let redirectLocation = {}
+    let filename = undefined
+
+    try {
+      switch (req.params.libraryname) {
+        case "diff.min.js":
+          redirectLocation = { Location: 'https://cdn.openmindmap.org/thirdparty/diff.min.js' }
+          filename = path.resolve(path.dirname(__filename), "..", "vendor", "diff.min.js")
+
+          if (fs.existsSync(filename)) {
+            return res.sendFile(filename)
+          }
+          break
+          
+        case "flowviewer.min.js":
+          redirectLocation = { Location: 'https://cdn.openmindmap.org/embed/flowviewer.js' }
+          filename = path.resolve(path.dirname(__filename), "..", "vendor", "flowviewer.min.js")
+
+          if (fs.existsSync(filename)) {
+            return res.sendFile(filename)
+          }
+          break
+      }
+    } catch (ex) { }
+
+    res.writeHead(302, redirectLocation)
+    return res.end();
+  });
+
   RED.httpAdmin.post("/FlowCompareCfg",
     RED.auth.needsPermission("FlowCompareCfg.write"),
     (req, res) => {
