@@ -8,6 +8,10 @@ Flows are deployed from the editor to the server, hence they can differ. This no
 
 I wanted to have a *visual* comparison between versions of flows. Also I wanted changes to be classified as being either visual or textual: visual changes movements of nodes, textual are content changes. Node-RED does have a diff tool however, for me, this shows too much (all nodes are shown even those that haven't changed) and changes that are visual are shown textually. 
 
+## Screencast 
+
+For more details why this node exists, check out the [screencast](https://blog.openmindmap.org/blog/flow-compare).
+
 ## Description
 
 Once installed, node can be accessed via the menu:
@@ -59,13 +63,6 @@ Red are deletions and green are additions, i.e., changes.
 
 Zoom of comparison image is not perfect since pinch does not work, only the scroll works for zoom. Since scroll is also used to scroll up and down, scroll left and right to zoom image in and out.
 
-2) Extra JS scripts
-
-This node will load two JS libraries (when added [to the palette](https://github.com/gorenje/node-red-contrib-flow-compare/blob/4981b85bf29cf5726609d39a0f6e21e8456d72f5/nodes/flowcompare.html#L478-L479)):
-
-- https://cdn.openmindmap.org/thirdparty/diff.min.js
-- https://cdn.openmindmap.org/embed/flowviewer.js
-
 ### Artifacts
 
 - [GitHub repo](https://github.com/gorenje/node-red-contrib-flow-compare)
@@ -75,5 +72,4 @@ This node will load two JS libraries (when added [to the palette](https://github
 
 - [Frontend Flow](https://flowhub.org/f/7750f7bbea836e0e) to trigger a comparison update on flow tab change.
 
-
-
+- [Contact Author](https://blog.openmindmap.org/author.vcf)
