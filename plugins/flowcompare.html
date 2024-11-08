@@ -5,7 +5,7 @@
 (function() {
    var globalYourConfigNode = null;
 
-   function escapeHtml(e){return String(e).replace(/[&<>"'`=\/]/g,function(e){return entityMap[e]})}function addPanZoom(){var e=$(".flowviewer svg"),t=(e.attr("width",""),e.attr("height",""),e.css("width",$(".flowviewer").width()+"px"),e.css("height","300px"),$(".flowviewer svg .containerGroup")[0].getBBox());e.attr("viewBox",[t.x,t.y,t.width,t.height].join(" "));(e=d3.select(".flowviewer svg")).html("<g>"+e.html()+"</g>");var o=e.select("g"),n=d3.behavior.zoom().scaleExtent([.3,100]).on("zoom",function(e){o.attr({transform:"translate("+n.translate()+") scale("+n.scale()+")"})});e.call(n)}var entityMap={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;","/":"&#x2F;","`":"&#x60;","=":"&#x3D;"},descMap={z:"Flow Tab Id",g:"Group Id",d:"Disabled",w:"Width",h:"Height"};function attrDesc(e){return descMap[e]?" <i style='font-size: 80%;'>("+descMap[e]+")</i>":""}function createDiff(r,c){var s=[],l=[];if(Object.keys(c).forEach(function(e){var t;Object.keys(r).indexOf(e)<0&&(t="object"==typeof c[e]?JSON.stringify(c[e]):c[e],s.push("<tr class='dv-removed'><th>"+e+attrDesc(e)+"</th><td><i>MISSING</i></td><td><code>"+escapeHtml(t)+"</code></td></tr>"),l.push(e))}),Object.keys(r).forEach(function(e){var t;Object.keys(c).indexOf(e)<0&&(t="object"==typeof r[e]?JSON.stringify(r[e]):r[e],s.push("<tr class='dv-added'><th>"+e+attrDesc(e)+"</th><td><code>"+escapeHtml(t)+"</code></td><td><i>ADDED</i></td></tr>"),l.push(e))}),Object.keys(r).forEach(function(n){if(-1<Object.keys(c).indexOf(n))if(JSON.stringify(r[n])!==JSON.stringify(c[n])){let o=null,t=void 0;l.push(n);try{t=Diff.diffLines(c[n],r[n])}catch(e){t=Diff.diffLines(JSON.stringify(c[n],void 0,1),JSON.stringify(r[n],void 0,1))}const a=document.createDocumentFragment();t.forEach(e=>{var t=e.added?"green":e.removed?"red":"#040506";(o=document.createElement("pre")).setAttribute("class","dv-pre-elem"),o.style.color=t,o.appendChild(document.createTextNode(e.value)),o.appendChild(document.createElement("br")),a.appendChild(o)});var e,d=document.createElement("tr"),i=(d.setAttribute("class","dv-differ"),document.createElement("th"));i.appendChild(document.createTextNode(n)),descMap[n]&&((e=document.createElement("i")).style["font-size"]="80%",e.appendChild(document.createTextNode("("+descMap[n]+")")),i.appendChild(e)),d.append(i),(i=document.createElement("td")).setAttribute("colspan","2"),i.append(a),d.append(i),s.push(d.outerHTML)}else s.push("<tr><th>"+n+"</th><td><code>"+escapeHtml(r[n])+"</code></td><td><code>"+escapeHtml(c[n])+"</code></td></tr>")}),0==l.length){let o=null;var e="OBJ",t=Diff.diffJson(c,r);const i=document.createDocumentFragment();t.forEach(e=>{var t=e.added?"green":e.removed?"red":"#040506";(o=document.createElement("pre")).setAttribute("class","dv-pre-elem"),o.style.color=t,o.appendChild(document.createTextNode(e.value)),o.appendChild(document.createElement("br")),i.appendChild(o)});var n,t=document.createElement("tr"),d=(t.setAttribute("class","dv-differ"),document.createElement("th"));return d.appendChild(document.createTextNode(e)),descMap[e]&&((n=document.createElement("i")).style["font-size"]="80%",n.appendChild(document.createTextNode("("+descMap[e]+")")),d.appendChild(n)),t.append(d),(d=document.createElement("td")).setAttribute("colspan","2"),d.append(i),t.append(d),{html:t.outerHTML,icon:"fa-question"}}var o=["x","y","w","h","g","wires"];return{html:s.join(""),icon:0==l.filter(e=>o.indexOf(e)<0).length?"fa-eye":"fa-pencil"}}function getFlowDataFromCurrentWorkspace(){var e=RED.workspaces.active(),t=RED.nodes.groups(e),e=(t=(t=t.concat(RED.nodes.junctions(e))).concat(RED.nodes.filterNodes({z:e})),RED.nodes.eachConfig(function(e){e.z===RED.workspaces.active()&&!1===e._def.hasUsers&&t.push(e)}),RED.nodes.workspace(e)||RED.nodes.subflow(e));return t.unshift(e),RED.nodes.createExportableNodeSet(t)}function doSubmission(n){var t=RED.workspaces.active(),e=n.filter(e=>e.z==t||e.id==t);$($($("#svgelem .container-diff02")[0]).find(".containerGroup")[0]).find("g").html(""),$($($("#svgelem .container-diff01")[0]).find(".containerGroup")[0]).find("g").html(""),$.ajax({url:"FlowCompareCfg",type:"POST",contentType:"application/json; charset=utf-8",data:JSON.stringify({flowid:t,flowdata:e||{},flowlabel:(RED.nodes.workspace(t)||{label:"subflow"}).label}),success:function(e){var a=[],r={};if("failed"==e.status)RED.notify("Error happened, please check console",{type:"error",timeout:2e3}),console.error("Error in flow compare: ",e);else{renderFlow(e.flowid,e.nodes,$($("#svgelem .container-diff02")[0]),{arrows:!1,gridlines:!1,zoom:!1,images:!0,linklines:!0,dllink:!1,labels:!0}),renderFlow(e.flowid,n,$($("#svgelem .container-diff01")[0]),{arrows:!1,gridlines:!1,zoom:!1,images:!0,linklines:!0,dllink:!1,labels:!0});var t=$(".flowviewer svg"),o=(t.attr("width",""),t.attr("height",""),t.css("width",$(".flowviewer").width()+"px"),t.css("height","300px"),$(".flowviewer svg .containerGroup")[0].getBBox());if(t.attr("viewBox",[o.x,o.y,o.width,o.height].join(" ")),document.getElementById("node-input-compare-slider").oninput=function(){$(".container-diff01").css("opacity",this.value/100),$(".container-diff02").css("opacity",(100-this.value)/100)},e.changes.forEach(function(e){var t,o,n,d,i=e.id;"deleted"==e.type?(r[i]={label:e.oldObj.name||e.oldObj.type,icon:"fa fa-times",class:"",diffcontent:createDiff({},e.oldObj).html,sublabel:e.oldObj.type,selected:!1,checkbox:!1,children:void 0},$(".node-"+i).addClass("deleted"),$(".group-"+i).addClass("deleted"),a.push(r[i])):"added"==e.type?(r[i]={objid:i,label:e.newObj.name||e.newObj.type,icon:"fa fa-check",class:"",diffcontent:createDiff(e.newObj,{}).html,sublabel:e.newObj.type,selected:!1,checkbox:!1,children:void 0},$(".node-"+i).addClass("added"),$(".group-"+i).addClass("added"),a.push(r[i])):"tab"==e.oldObj.type||"group"==e.oldObj.type||"junction"==e.oldObj.type?(d=createDiff(e.newObj,e.oldObj),r[i]={objid:i,label:e.oldObj.name||e.oldObj.type,icon:"fa "+d.icon,class:"",diffcontent:d.html,sublabel:e.type+" - "+e.oldObj.type,selected:!1,checkbox:!1,children:void 0},"fa-eye"==d.icon&&($(".node-"+i).addClass("moved"),$(".group-"+i).addClass("moved")),"fa-pencil"==d.icon&&($(".node-"+i).addClass("changed"),$(".group-"+i).addClass("changed")),a.push(r[i])):((t=RED.nodes.node(i))||console.log("Node not found",e),(o=RED.nodes.getType(t.type))&&(n=("function"==typeof(n=o.label)?n.call(t):n)||""),o&&n||(n=t.type),d=createDiff(e.newObj,e.oldObj),r[t.id]={node:t,objid:i,label:n,icon:"fa "+d.icon,class:"",diffcontent:d.html,sublabel:e.oldObj.type,selected:!1,checkbox:!1,children:void 0},"fa-eye"==d.icon&&($(".node-"+i).addClass("moved"),$(".group-"+i).addClass("moved")),"fa-pencil"==d.icon&&($(".node-"+i).addClass("changed"),$(".group-"+i).addClass("changed")),a.push(r[t.id]))}),0==a.length){RED.notify("No Flow Changes",{type:"warning",timeout:2e3});try{$("#node-input-flowcompare-target-container-div").treeList("empty"),$("#node-input-flowcompare-diffcontainer").html("")}catch(e){}}else{try{$("#node-input-flowcompare-target-container-div").treeList("empty")}catch(e){$("#node-input-flowcompare-target-container-div").css({width:"100%",height:"200px"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){$(".node-"+t.objid).addClass("highlight"),$(".group-"+t.objid).addClass("highlight")}).on("treelistitemmouseout",function(e,t){$(".node-"+t.objid).removeClass("highlight"),$(".group-"+t.objid).removeClass("highlight")}).on("treelistselect",function(e,t){t.diffcontent?($("#node-input-flowcompare-diffcontainer").html(t.diffcontent),t.objid&&(RED.view.reveal(t.objid,!0),RED.view.redraw())):$("#node-input-flowcompare-diffcontainer").html("")}).on("treelistconfirm",function(e,t){var o;t.objid&&(o=t.objid,setTimeout(()=>{var e=RED.nodes.node(o);e&&(RED.view.reveal(e.id),RED.view.select(e.id),RED.editor.edit(e)),o==RED.workspaces.active()&&RED.workspaces.edit()},50))})}$("#node-input-flowcompare-target-container-div").treeList("data",a.sort((e,t)=>e.icon>t.icon))}}},error:function(e,t,o){404==e.status?RED.notify("Node has not yet been deployed, please deploy.","error"):405==e.status?RED.notify("Not Allowed.","error"):500==e.status?RED.notify(node._("common.notification.error",{message:node._("inject.errors.failed")}),"error"):0==e.status?RED.notify(node._("common.notification.error",{message:node._("common.notification.errors.no-response")}),"error"):RED.notify(node._("common.notification.error",{message:node._("common.notification.errors.unexpected",{status:e.status,message:t})}),"error")}})}function flowCompareEventListener(e){$("#node-input-flowcompare-autoupdate-button").is(":checked")&&e.old!=e.workspace&&doSubmission(getFlowDataFromCurrentWorkspace())}
+   function escapeHtml(e){return String(e).replace(/[&<>"'`=\/]/g,function(e){return entityMap[e]})}function addPanZoom(){var e=$(".flowviewer svg"),t=(e.attr("width",""),e.attr("height",""),e.css("width",$(".flowviewer").width()+"px"),e.css("height","300px"),$(".flowviewer svg .containerGroup")[0].getBBox());e.attr("viewBox",[t.x,t.y,t.width,t.height].join(" "));(e=d3.select(".flowviewer svg")).html("<g>"+e.html()+"</g>");var o=e.select("g"),n=d3.behavior.zoom().scaleExtent([.3,100]).on("zoom",function(e){o.attr({transform:"translate("+n.translate()+") scale("+n.scale()+")"})});e.call(n)}var entityMap={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;","/":"&#x2F;","`":"&#x60;","=":"&#x3D;"},descMap={z:"Flow Tab Id",g:"Group Id",d:"Disabled",w:"Width",h:"Height"};function attrDesc(e){return descMap[e]?" <i style='font-size: 80%;'>("+descMap[e]+")</i>":""}function createDiff(r,c){var s=[],l=[];if(Object.keys(c).forEach(function(e){var t;Object.keys(r).indexOf(e)<0&&(t="object"==typeof c[e]?JSON.stringify(c[e]):c[e],s.push("<tr class='dv-removed'><th>"+e+attrDesc(e)+"</th><td><i>MISSING</i></td><td><code>"+escapeHtml(t)+"</code></td></tr>"),l.push(e))}),Object.keys(r).forEach(function(e){var t;Object.keys(c).indexOf(e)<0&&(t="object"==typeof r[e]?JSON.stringify(r[e]):r[e],s.push("<tr class='dv-added'><th>"+e+attrDesc(e)+"</th><td><code>"+escapeHtml(t)+"</code></td><td><i>ADDED</i></td></tr>"),l.push(e))}),Object.keys(r).forEach(function(d){if(-1<Object.keys(c).indexOf(d))if(JSON.stringify(r[d])!==JSON.stringify(c[d])){let o=null,t=void 0;l.push(d);try{t=Diff.diffLines(c[d],r[d])}catch(e){t=Diff.diffLines(JSON.stringify(c[d],void 0,1),JSON.stringify(r[d],void 0,1))}let n=document.createDocumentFragment();t.forEach(e=>{var t=e.added?"green":e.removed?"red":"#040506";(o=document.createElement("pre")).setAttribute("class","dv-pre-elem"),o.style.color=t,o.appendChild(document.createTextNode(e.value)),o.appendChild(document.createElement("br")),n.appendChild(o)});var e,i=document.createElement("tr"),a=(i.setAttribute("class","dv-differ"),document.createElement("th"));a.appendChild(document.createTextNode(d)),descMap[d]&&((e=document.createElement("i")).style["font-size"]="80%",e.appendChild(document.createTextNode("("+descMap[d]+")")),a.appendChild(e)),i.append(a),(a=document.createElement("td")).setAttribute("colspan","2"),a.append(n),i.append(a),s.push(i.outerHTML)}else s.push("<tr><th>"+d+"</th><td><code>"+escapeHtml(r[d])+"</code></td><td><code>"+escapeHtml(c[d])+"</code></td></tr>")}),0==l.length){let o=null;var e="OBJ",t=Diff.diffJson(c,r);let n=document.createDocumentFragment();t.forEach(e=>{var t=e.added?"green":e.removed?"red":"#040506";(o=document.createElement("pre")).setAttribute("class","dv-pre-elem"),o.style.color=t,o.appendChild(document.createTextNode(e.value)),o.appendChild(document.createElement("br")),n.appendChild(o)});var d,t=document.createElement("tr"),i=(t.setAttribute("class","dv-differ"),document.createElement("th"));return i.appendChild(document.createTextNode(e)),descMap[e]&&((d=document.createElement("i")).style["font-size"]="80%",d.appendChild(document.createTextNode("("+descMap[e]+")")),i.appendChild(d)),t.append(i),(i=document.createElement("td")).setAttribute("colspan","2"),i.append(n),t.append(i),{html:t.outerHTML,icon:"fa-question"}}var o=["x","y","w","h","g","wires"];return{html:s.join(""),icon:0==l.filter(e=>o.indexOf(e)<0).length?"fa-eye":"fa-pencil"}}function getFlowDataFromCurrentWorkspace(){var e=RED.workspaces.active(),t=RED.nodes.groups(e),e=(t=(t=t.concat(RED.nodes.junctions(e))).concat(RED.nodes.filterNodes({z:e})),RED.nodes.eachConfig(function(e){e.z===RED.workspaces.active()&&!1===e._def.hasUsers&&t.push(e)}),RED.nodes.workspace(e)||RED.nodes.subflow(e));return t.unshift(e),RED.nodes.createExportableNodeSet(t)}function doSubmission(n){var t=RED.workspaces.active(),e=n.filter(e=>e.z==t||e.id==t);$($($("#svgelem .container-diff02")[0]).find(".containerGroup")[0]).find("g").html(""),$($($("#svgelem .container-diff01")[0]).find(".containerGroup")[0]).find("g").html(""),$.ajax({url:"FlowCompareCfg",type:"POST",contentType:"application/json; charset=utf-8",data:JSON.stringify({flowid:t,flowdata:e||{},flowlabel:(RED.nodes.workspace(t)||{label:"subflow"}).label}),success:function(e){var a=[],r={};if("failed"==e.status)RED.notify("Error happened, please check console",{type:"error",timeout:2e3}),console.error("Error in flow compare: ",e);else{renderFlow(e.flowid,e.nodes,$($("#svgelem .container-diff02")[0]),{arrows:!1,gridlines:!1,zoom:!1,images:!0,linklines:!0,dllink:!1,labels:!0}),renderFlow(e.flowid,n,$($("#svgelem .container-diff01")[0]),{arrows:!1,gridlines:!1,zoom:!1,images:!0,linklines:!0,dllink:!1,labels:!0});var t=$(".flowviewer svg"),o=(t.attr("width",""),t.attr("height",""),t.css("width",$(".flowviewer").width()+"px"),t.css("height","300px"),$(".flowviewer svg .containerGroup")[0].getBBox());if(t.attr("viewBox",[o.x,o.y,o.width,o.height].join(" ")),document.getElementById("node-input-compare-slider").oninput=function(){$(".container-diff01").css("opacity",this.value/100),$(".container-diff02").css("opacity",(100-this.value)/100)},e.changes.forEach(function(e){var t,o,n,d,i=e.id;"deleted"==e.type?(r[i]={label:e.oldObj.name||e.oldObj.type,icon:"fa fa-times",class:"",diffcontent:createDiff({},e.oldObj).html,sublabel:e.oldObj.type,selected:!1,checkbox:!1,children:void 0},$(".node-"+i).addClass("deleted"),$(".group-"+i).addClass("deleted"),a.push(r[i])):"added"==e.type?(r[i]={objid:i,label:e.newObj.name||e.newObj.type,icon:"fa fa-check",class:"",diffcontent:createDiff(e.newObj,{}).html,sublabel:e.newObj.type,selected:!1,checkbox:!1,children:void 0},$(".node-"+i).addClass("added"),$(".group-"+i).addClass("added"),a.push(r[i])):"tab"==e.oldObj.type||"group"==e.oldObj.type||"junction"==e.oldObj.type?(d=createDiff(e.newObj,e.oldObj),r[i]={objid:i,label:e.oldObj.name||e.oldObj.type,icon:"fa "+d.icon,class:"",diffcontent:d.html,sublabel:e.type+" - "+e.oldObj.type,selected:!1,checkbox:!1,children:void 0},"fa-eye"==d.icon&&($(".node-"+i).addClass("moved"),$(".group-"+i).addClass("moved")),"fa-pencil"==d.icon&&($(".node-"+i).addClass("changed"),$(".group-"+i).addClass("changed")),a.push(r[i])):((t=RED.nodes.node(i))||console.log("Node not found",e),(o=RED.nodes.getType(t.type))&&(n=("function"==typeof(n=o.label)?n.call(t):n)||""),o&&n||(n=t.type),d=createDiff(e.newObj,e.oldObj),r[t.id]={node:t,objid:i,label:n,icon:"fa "+d.icon,class:"",diffcontent:d.html,sublabel:e.oldObj.type,selected:!1,checkbox:!1,children:void 0},"fa-eye"==d.icon&&($(".node-"+i).addClass("moved"),$(".group-"+i).addClass("moved")),"fa-pencil"==d.icon&&($(".node-"+i).addClass("changed"),$(".group-"+i).addClass("changed")),a.push(r[t.id]))}),0==a.length){RED.notify("No Flow Changes",{type:"warning",timeout:2e3});try{$("#node-input-flowcompare-target-container-div").treeList("empty"),$("#node-input-flowcompare-diffcontainer").html("")}catch(e){}}else{try{$("#node-input-flowcompare-target-container-div").treeList("empty")}catch(e){$("#node-input-flowcompare-target-container-div").css({width:"100%",height:"calc(100%)"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){$(".node-"+t.objid).addClass("highlight"),$(".group-"+t.objid).addClass("highlight")}).on("treelistitemmouseout",function(e,t){$(".node-"+t.objid).removeClass("highlight"),$(".group-"+t.objid).removeClass("highlight")}).on("treelistselect",function(e,t){t.diffcontent?($("#node-input-flowcompare-diffcontainer").html(t.diffcontent),t.objid&&(RED.view.reveal(t.objid,!0),RED.view.redraw())):$("#node-input-flowcompare-diffcontainer").html("")}).on("treelistconfirm",function(e,t){var o;t.objid&&(o=t.objid,setTimeout(()=>{var e=RED.nodes.node(o);e&&(RED.view.reveal(e.id),RED.view.select(e.id),RED.editor.edit(e)),o==RED.workspaces.active()&&RED.workspaces.edit()},50))})}$("#node-input-flowcompare-target-container-div").treeList("data",a.sort((e,t)=>e.icon>t.icon))}}},error:function(e,t,o){404==e.status?RED.notify("Node has not yet been deployed, please deploy.","error"):405==e.status?RED.notify("Not Allowed.","error"):500==e.status?RED.notify(node._("common.notification.error",{message:node._("inject.errors.failed")}),"error"):0==e.status?RED.notify(node._("common.notification.error",{message:node._("common.notification.errors.no-response")}),"error"):RED.notify(node._("common.notification.error",{message:node._("common.notification.errors.unexpected",{status:e.status,message:t})}),"error")}})}function flowCompareEventListener(e){$("#node-input-flowcompare-autoupdate-button").is(":checked")&&e.old!=e.workspace&&doSubmission(getFlowDataFromCurrentWorkspace())}
 
    function ensureYourConfigNodeExists() {
       // This function makes sure there is 1 instance of your config node is available, and that the globalYourConfigNode variable refers to it.
@@ -97,6 +97,14 @@
          if ( e ) { e.preventDefault(); }
          doSubmission(getFlowDataFromCurrentWorkspace())
       });
+
+      RED.panels.create({
+         id: "flowcompare-diff-panel",
+         resize: (topSze,botSze) => {
+            $('#node-input-flowcompare-diffcontainer').parent().parent().css("height",botSze)
+            $('#node-input-flowcompare-target-container-div').parent().css('height',`calc(${topSze}px - 32vh)`)
+         }
+      })
    };
    RED.events.on('runtime-state', initialiseConfigNodeOnce);
 })();
@@ -143,14 +151,9 @@
   stroke-width: 10px !important;
 }
 
-.diff-viewer {
+.flowcompare-diff-viewer {
   overflow: scroll;
-  background-color: rgb(244, 244, 244);
-  border: 1px solid rgb(196, 196, 196);
-  height: 80vh;
-  padding: 20px;
   max-width: 90vw;
-  border-radius: 5px;
 }
 
 .dv-differ {
@@ -173,21 +176,6 @@
   display: block;
   word-wrap: break-word;
   margin: 0px !important;
-}
-
-
-#diff-viewer{
-  overflow:scroll;
-  background-color:rgb(244, 244, 244);
-  border: 2px solid #000;
-  height:80vh;
-  display:none;
-  position:fixed;
-  top:10vh;
-  left:5vw;
-  z-index: 1000;
-  padding: 20px;
-  max-width: 90vw;
 }
 
 .dv-differ {
@@ -216,51 +204,58 @@
 
 <!-- The html for the right sidebar plugin screen -->
 <script type="text/x-red" data-template-name="FlowCompare">
-  <div class="form-row" style="margin-left: 15px; margin-top: 30px; margin-right: 15px;">
-    <button id="node-input-flowcompare-button"
+<div id="flowcompare-diff-panel" style=" height: 91vh;">
+  <div>
+    <div style="margin-left: 15px; margin-top: 30px; margin-right: 15px;">
+      <button id="node-input-flowcompare-button"
                 class="red-ui-button">Compare</button>
-    <input type="checkbox" id="node-input-flowcompare-autoupdate-button"
+      <input type="checkbox" id="node-input-flowcompare-autoupdate-button"
                style="display:inline-block; width:15px; vertical-align:baseline; margin-left: 20px;">
-    <label for="node-input-flowcompare-autoupdate-button">Auto Compare</label>
-  </div>
-    
-  <div class="form-row node-input-target-row node-input-target-list-row" 
-           style="position: relative; min-height: 100px; margin-left: 10px; margin-right: 15px;">  
-    <div id="node-input-flowcompare-target-container-div" style="min-height: 100px"></div>
-  </div>
-  
-  <div class="form-row" style="position: relative; min-height: 300px;  margin-left: 10px; margin-right: 15px;">
-    <div id="node-input-flowcompare-svgcontainer" class="flowviewer">
-      <svg id="svgelem" pointer-events="all" style="cursor: crosshair; min-height: 300px;"
-        version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <!-- Use group elems to ensure that layering of shapes is correct, i.e. nodes always over wires -->
-        <g class='container-gridlines'>
-          <g class='flowGridlines'></g>
-        </g>
-
-        <g class='container-diff01' style="opacity: 0;">
-          <g class="containerGroup">
-            <g class="flowDescription"></g>
-            <g class='flowGroups'></g>
-            <g class='flowWires'></g>
-            <g class='flowNodes'></g>
-          </g>
-        </g>
-        <g class='container-diff02'  style="opacity: 1;">
-          <g class="containerGroup">
-            <g class="flowDescription"></g>
-            <g class='flowGroups'></g>
-            <g class='flowWires'></g>
-            <g class='flowNodes'></g>
-          </g>
-        </g>
-      </svg>
+      <label for="node-input-flowcompare-autoupdate-button">Auto Compare</label>
     </div>
-    <input style="width: 100%; min-width: 300px;" id="node-input-compare-slider" type="range" min="0" max="100" step="1" value="0"></input>
-  </div>
-  
-  <div class="form-row" style="position: relative; min-height: 100px;  margin-left: 10px; margin-right: 15px;">
-    <div id="node-input-flowcompare-diffcontainer" class="diff-viewer"></div>
+
+    <div class="form-row node-input-target-row node-input-target-list-row"
+        style="position: relative; min-height: 5vh; height: 20vh; margin-left: 10px; margin-right: 15px;">
+      <div id="node-input-flowcompare-target-container-div"></div>
+    </div>
+
+    <div style="position: relative; min-height: 300px;  margin-left: 10px; margin-right: 15px;">
+      <input style="width: 100%; min-width: 300px;" id="node-input-compare-slider" type="range" min="0" max="100" step="1" value="0"></input>
+       <div id="node-input-flowcompare-svgcontainer" class="flowviewer">
+        <svg id="svgelem" pointer-events="all" style="cursor: crosshair; min-height: 300px;" version="1.1"
+          xmlns="http://www.w3.org/2000/svg">
+          <!-- Use group elems to ensure that layering of shapes is correct, i.e. nodes always over wires -->
+          <g class='container-gridlines'>
+            <g class='flowGridlines'></g>
+          </g>
+
+          <g class='container-diff01' style="opacity: 0;">
+            <g class="containerGroup">
+              <g class="flowDescription"></g>
+              <g class='flowGroups'></g>
+              <g class='flowWires'></g>
+              <g class='flowNodes'></g>
+            </g>
+          </g>
+          <g class='container-diff02' style="opacity: 1;">
+            <g class="containerGroup">
+              <g class="flowDescription"></g>
+              <g class='flowGroups'></g>
+              <g class='flowWires'></g>
+              <g class='flowNodes'></g>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
   </div>
 
+  <div>
+      <div style="margin-left: 10px; overflow: hidden; display: flex; flex-direction: column; width: 97%; height: 40vh; margin-top: 10px;">
+         <div class="red-ui-help" style="flex: 1 1 auto; overflow-y: auto;">
+          <div id="node-input-flowcompare-diffcontainer" class="flowcompare-diff-viewer"></div>
+         </div>
+      </div>
+  </div>
+</div>
 </script>
