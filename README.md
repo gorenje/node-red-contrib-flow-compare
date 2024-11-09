@@ -4,24 +4,6 @@ FlowCompare node is a node for visually comparing the editor flows with flows de
 
 Flows are deployed from the editor to the server, hence they can differ. This node highlights changes that have occurred in the editor.
 
-<script src="https://giscus.app/client.js"
-        data-repo="gorenje/cdn.openmindmap.org"
-        data-repo-id="R_kgDOJ8ggzQ"
-        data-category="Announcements"
-        data-category-id="DIC_kwDOJ8ggzc4Cauwt"
-        data-mapping="url"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="light"
-        data-lang="en"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async>
-</script>
-<small><i>Comments powered by <a href="https://giscus.app/" target="_blank">giscus</a></i></small>
-
 ## Why?
 
 I wanted to have a *visual* comparison between versions of flows. Also I wanted changes to be classified as being either visual or textual: visual changes movements of nodes, textual are content changes. Node-RED does have a diff tool however, for me, this shows too much (all nodes are shown even those that haven't changed) and changes that are visual are shown textually. 
