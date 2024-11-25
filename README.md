@@ -16,6 +16,8 @@ For more details why this node exists, check out the [screencast](https://blog.o
 
 Once installed, node can be accessed via the menu:
 
+(NOTE: You may be required to restart Node-RED to access the menu for the first time)
+
 ![img](https://cdn.openmindmap.org/content/1697530336854_Screen_Shot_2023-10-17_at_10.12.07.png)
 
 The panel is split into a list of changes, an image visually showing changes and a detailed change panel at the bottom:
