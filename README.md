@@ -16,7 +16,7 @@ For more details why this node exists, check out the [screencast](https://blog.o
 
 Once installed, node can be accessed via the menu:
 
-(NOTE: You may be required to restart Node-RED to access the menu for the first time)
+(NOTE: You may be required to restart/redeploy Node-RED to access the menu for the first time.)
 
 ![img](https://cdn.openmindmap.org/content/1697530336854_Screen_Shot_2023-10-17_at_10.12.07.png)
 
@@ -59,6 +59,10 @@ In the textual diff box:
 
 Red are deletions and green are additions, i.e., changes.
 
+## Try before you buy
+
+The sidebar can also be previewed in the [serverless Node-RED](https://cdn.flowhub.org) - change something in the preloaded flow and press the compare button *before* pressing the deploy button.
+
 ## Not Perfect
 
 1) Image Zoom
@@ -71,7 +75,5 @@ Zoom of comparison image is not perfect since pinch does not work, only the scro
 - [Flow maintaning code](https://flowhub.org/f/bd2901f55cfc55ef)
 - [NPMjs node package](https://www.npmjs.com/package/@gregoriusrippenstein/node-red-contrib-flowcompare)
 - [Node-RED package](https://flows.nodered.org/node/@gregoriusrippenstein/node-red-contrib-flowcompare)
-
 - [Frontend Flow](https://flowhub.org/f/7750f7bbea836e0e) to trigger a comparison update on flow tab change.
-
 - [Contact Author](https://blog.openmindmap.org/author.vcf)
