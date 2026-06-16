@@ -64,9 +64,7 @@
    }
 
    // Add your plugin as a new tabsheet in the right sidebar AFTER the flow editor is completely started
-   var initialiseConfigNodeOnce = () => {
-      RED.events.off('runtime-state', initialiseConfigNodeOnce);
-
+   var flowCompareCreateSidebar = () => {
       // The html content of the sidebar has been specified below as a data-template, from where it can be loaded:
       var content = $($('script[type="text/x-red"][data-template-name="FlowCompare"]').i18n().html());
     
@@ -83,9 +81,6 @@
          iconClass: "fa fa-map" // your fontawesome icon
       });
       
-      addPanZoom();
-      ensureYourConfigNodeExists();
-
       RED.events.on('workspace:change', flowCompareEventListener);
 
       RED.actions.remove("flowcompare:compare-flow-to-remote")
@@ -107,8 +102,16 @@
             $('#node-input-flowcompare-target-container-div').parent().css('height',`calc(${topSze}px - 32vh)`)
          }
       })
-   };
-   RED.events.on('runtime-state', initialiseConfigNodeOnce);
+
+      var initialiseFlowCompareSidebar = () => {
+         RED.events.off('flows:loaded', initialiseFlowCompareSidebar);
+         addPanZoom();
+         ensureYourConfigNodeExists();
+      };
+      RED.events.on('flows:loaded', initialiseFlowCompareSidebar);
+   }
+
+   RED.plugins.registerPlugin("flowcompare-sidebar-plugin", { onadd: flowCompareCreateSidebar });
 })();
 </script>
 
